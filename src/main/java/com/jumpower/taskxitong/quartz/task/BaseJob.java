@@ -1,8 +1,7 @@
 package com.jumpower.taskxitong.quartz.task;
 
 
-import com.ktamr.service.HaConfigService;
-import com.ktamr.service.HaErrrecordService;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -25,12 +24,6 @@ import java.util.Map;
 
 public class BaseJob {
 
-    @Autowired
-    protected HaConfigService haConfigService;
-
-
-    @Autowired
-    protected HaErrrecordService haErrrecordService;
 
     protected Object getSessionValue(HttpSession session){
         Object attribute =session.getAttribute("operatorCode");

@@ -6,7 +6,7 @@ import java.util.Date;
 public class SysTask {
 
   //任务ID
-  private Integer id;
+  private Long id;
   //任务名称
   private String jobName;
   //任务描述
@@ -28,11 +28,11 @@ public class SysTask {
   //更新时间
   private Date updateTime;
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

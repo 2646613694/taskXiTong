@@ -1,11 +1,11 @@
 package com.jumpower.taskxitong.controller;
 
+import com.jumpower.taskxitong.common.YYBlogResult;
 import com.jumpower.taskxitong.entity.SysTask;
+import com.jumpower.taskxitong.enums.JobStatusEnum;
 import com.jumpower.taskxitong.service.SysTaskService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -43,8 +43,29 @@ public class taskController {
     @ResponseBody
     public Object taskListJson(SysTask task){
         List<SysTask> sysTasks = taskService.list(task);
-        //List<WmsUser> wmsUsers = wmsUserService.queryWmsUserMapperList(wmsUser);
+
         return sysTasks;
+    }
+
+    /**
+     * 修改任务状态
+     * @param id
+     * @param jobStatus
+     * @return
+     */
+    @PostMapping("/changeStatus")
+    @ResponseBody
+    public String changeStatus(@RequestParam(value = "taskId",required = false) Long id,
+                                     @RequestParam(value = "state",required = false) Boolean jobStatus) {
+        String status = jobStatus == true ? JobStatusEnum.RUNNING.getCode() : JobStatusEnum.STOP.getCode();
+        try {
+            taskService.changeStatus(id, status);
+            return "true";
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("错误信息为:" + e.getMessage());
+        }
+      return "操作失败";
     }
 
 }

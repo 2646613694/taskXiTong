@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>任务列表信息</title>
+    <link rel="stylesheet" href="/static/dist/bootstrap-toggle.css">
     <link rel="stylesheet" href="/static/dist/bootstrap.min.css">
-
     <link rel="stylesheet" href="/static/dist/bootstrap-table.min.css">
 </head>
 <body>
-<table class="table table-hover col-lg-1" id="table-request"
-       style="table-layout: fixed;
-                       word-break:break-all; ">
+<table class="table table-hover col-lg-1" id="table-request" style="table-layout: fixed; word-break:break-all; ">
 </table>
-
 <script src="/static/jquery/jquery.js"></script>
-
 <script src="/static/jquery/bootstrap.min.js"></script>
+<script src="/static/dist/bootstrap-toggle.js"></script>
 <script src="/static/dist/bootstrap-table.min.js"></script>
 <script src="/static/dist/locale/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript">
@@ -25,14 +22,12 @@
         dataType: "json",
         method: 'POST',
         contentType: "application/x-www-form-urlencoded",
-
         // toolbar: '#toolbar',                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
         cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
         pagination: true,                   //是否显示分页（*）
         sortable: false,                     //是否启用排序
         sortOrder: "desc",                   //排序方式
-
         sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
         pageNumber:1,                       //初始化加载第一页，默认第一页
         pageSize: 10,                       //每页的记录行数（*）
@@ -68,7 +63,7 @@
                 page: (params.offset / params.limit) + 1,   //页码
                 sort: params.sort,      //排序列名
                 sortOrder: params.order //排位命令（desc，asc）
-            }
+            };
             return temp;
         },
         responseHandler:function(res){
@@ -87,7 +82,6 @@
             align : 'center',
             width :  100,
             valign : 'middle'
-
         },{
             field:'jobName',
             title:'任务名字',
@@ -103,21 +97,71 @@
                 width :  120 ,
                 valign : 'middle'
 
-            }],
+            },
+            {
+                field: 'jobStatus',
+                title: "是否启用",
+                align: 'left',
+                valign: 'middle',
+                formatter: function (value, row, index) {
+                    var $switch;
+                    if (value === "1") {
+                        $switch = "<input data-toggle='toggle' value=" + row.id + " name='avaCheck' type='checkbox' checked/>";
+                    } else {
+                        $switch = "<input data-toggle='toggle' value=" + row.id + " name='avaCheck' type='checkbox'/>";
+                    }
+                    return $switch;
+                }
+            }
+        ],
 
-        onLoadSuccess: function(){  //加载成功时执行
-            //alert("加载数据成功");
+        onLoadSuccess: function () {
+            var changeHandler = function () {
+                var id = $(this).val();
+                var state = $(this).prop('checked');
+                // alert("我进来啦" + "id为：" + id + " state为：" + state);
+                updateStatus(id, state);
+                //可以进行对开关的控制哥
+                /*var switchObj = $(this);
+                var flag = switchObj.prop("checked");
+                switchObj.prop("checked", state);*/
+            };
+            $("[name='avaCheck']").bootstrapToggle('destroy');
+            return $("[name='avaCheck']").bootstrapToggle({
+                on: '启用',//选中时显示文本
+                off: '停用',//未选中时显示文本
+                onstyle: 'success',//on样式：default,primary,success,info,warning,danger
+                offstyle: 'default',//off样式：default,primary,success,info,warning,danger
+                size: 'small',//控件大小：large,normal,small,mini
+            }).off('change.status').on('change.status', changeHandler);
         },
         onLoadError: function(){  //加载失败时执行
             alert("加载数据失败");
         }
     });
 
-
-
-
-
-
+    function updateStatus(id, state) {
+        $.ajax({
+            url: "/changeStatus"
+            , type: "POST"
+            , contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            , data: {
+                taskId: id,
+                state: state
+            }
+            , success: function (data) {
+                if (data == "true") {
+                    alert("牛逼哥,操作成功")
+                    //layer.msg("操作成功！", {icon: 1});
+                } else {
+                    alert("牛逼哥,操作失败")
+                    //layer.msg(data, {icon: 2});
+                    var flag = switchObj.prop("checked");
+                    switchObj.prop("checked", !flag);
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
