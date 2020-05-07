@@ -8,8 +8,159 @@
     <link rel="stylesheet" href="/static/dist/bootstrap-table.min.css">
 </head>
 <body>
-<table class="table table-hover col-lg-1" id="table-request" style="table-layout: fixed; word-break:break-all; ">
-</table>
+<div class="row">
+    <div>
+        <!-- 工具栏 -->
+        <div id="toolbar">
+            <input type="button" value="新增" id="addBtn" data-toggle="modal" data-target="#addUserModal" class="btn btn-primary"></input>
+            <input type="button" value="修改" id="editBtn" data-toggle="modal" data-target="#editUserModal" class="btn btn-primary" οnclick="editUser()"></input>
+            </input>
+        </div>
+    </div>
+    <table class="table table-hover col-lg-1" id="table-request" style="table-layout: fixed; word-break:break-all; ">
+    </table>
+</div>
+<!-- 新增用户的模态框，在修改用户中将获取一行的值放入input中，改变一些参数继续使用 -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>新增用户</h3>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm" action="/user/addUser" method="post" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputAccount" class="col-sm-2 control-label">账户</label>
+                        <div class="col-sm-7">
+                            <input type="account" name="account" class="form-control" id="inputAccount" placeholder="账户"/>
+                        </div>
+                        <label id="errorAccount" for="inputAccount" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group" >
+                        <label for="inputPassword" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-7">
+                            <input type="text" name="password" class="form-control" id="inputPassword" placeholder="密码"/>
+                        </div>
+                        <label id="errorPassword" for="inputPassword" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">姓名</label>
+                        <div class="col-sm-7">
+                            <input type="name" name="name" class="col-sm-4 form-control" id="inputName" placeholder="姓名"/>
+                        </div>
+                        <label id="errorName" for="inputName" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSex" class="col-sm-2 control-label">性别</label>
+                        <div class="col-sm-7">
+                            <input type="sex" name="sex" class="col-sm-4 form-control" id="inputSex" placeholder="性别"/>
+                        </div>
+                        <label id="errorSex" for="inputSex" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPhone" class="col-sm-2 control-label">手机</label>
+                        <div class="col-sm-7">
+                            <input type="phone" name="phone" class="col-sm-4 form-control" id="inputPhone" placeholder="手机"/>
+                        </div>
+                        <label id="errorPhone" for="inputPhone" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">邮箱</label>
+                        <div class="col-sm-7">
+                            <input type="email" name="email" class="col-sm-4 form-control" id="inputEmail" placeholder="邮箱"/>
+                        </div>
+                        <label id="errorEmail" for="inputEmail" class="col-sm-3 control-label"></label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="conf" class="btn btn-default" οnclick="addUser()">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" οnclick="resetAddModal()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改用户的模态框 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>修改用户</h3>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="post" class="form-horizontal">
+                    <div class="form-group" style="display:none">
+                        <label for="editId" class="col-sm-2 control-label">ID</label>
+                        <div class="col-sm-7">
+                            <input type="id" name="id"   class="form-control" id="editId" placeholder="ID" />
+                        </div>
+                        <label id="errorId" for="editId" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAccount" class="col-sm-2 control-label">账户</label>
+                        <div class="col-sm-7">
+                            <input type="account" name="account" class="form-control" id="editAccount" placeholder="账户"/>
+                        </div>
+                        <label id="errorAccount" for="inputAccount" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group" >
+                        <label for="inputPassword" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-7">
+                            <input type="text" name="password" class="form-control" id="editPassword" placeholder="密码"/>
+                        </div>
+                        <label id="errorPassword" for="inputPassword" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">姓名</label>
+                        <div class="col-sm-7">
+                            <input type="name" name="name" class="col-sm-4 form-control" id="editName" placeholder="姓名"/>
+                        </div>
+                        <label id="errorName" for="inputName" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSex" class="col-sm-2 control-label">性别</label>
+                        <div class="col-sm-7">
+                            <input type="sex" name="sex" class="col-sm-4 form-control" id="editSex" placeholder="性别"/>
+                        </div>
+                        <label id="errorSex" for="inputSex" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPhone" class="col-sm-2 control-label">手机</label>
+                        <div class="col-sm-7">
+                            <input type="phone" name="phone" class="col-sm-4 form-control" id="editPhone" placeholder="手机"/>
+                        </div>
+                        <label id="errorPhone" for="inputPhone" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">邮箱</label>
+                        <div class="col-sm-7">
+                            <input type="email" name="email" class="col-sm-4 form-control" id="editEmail" placeholder="邮箱"/>
+                        </div>
+                        <label id="errorEmail" for="inputEmail" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputStates" class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-7">
+                            <input type="states" name="states" class="col-sm-4 form-control" id="editStates" placeholder="状态"/>
+                        </div>
+                        <label id="errorStates" for="inputStates" class="col-sm-3 control-label"></label>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="inputCreated_at" class="col-sm-2 control-label">创建时间</label>
+                        <div class="col-sm-7">
+                            <input type="created_at" name="created_at" class="col-sm-4 form-control" id="editCreated_at" placeholder="创建时间" />
+                        </div>
+                        <label id="errorCreated_at" for="inputCreated_at" class="col-sm-3 control-label"></label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="conf" class="btn btn-default" οnclick="updateUser()">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" οnclick="resetAddModal()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/static/jquery/jquery.js"></script>
 <script src="/static/jquery/bootstrap.min.js"></script>
 <script src="/static/dist/bootstrap-toggle.js"></script>
@@ -32,7 +183,7 @@
         pageNumber:1,                       //初始化加载第一页，默认第一页
         pageSize: 10,                       //每页的记录行数（*）
         pageList:[5,10,20,30],//分页步进值       //可供选择的每页的行数（*）
-        // search:true,               //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+        search:true,               //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
         // strictSearch: true,
         oolbarAlign:'right',//工具栏对齐方式
         buttonsAlign:'right',//按钮对齐方式
@@ -88,7 +239,6 @@
             align : 'center',
             width :  120 ,
             valign : 'middle'
-
         },
             {
                 field:'description',
@@ -96,31 +246,39 @@
                 align : 'center',
                 width :  120 ,
                 valign : 'middle'
-
             },
             {
                 field: 'jobStatus',
                 title: "是否启用",
                 align: 'left',
+                width: 120,
                 valign: 'middle',
                 formatter: function (value, row, index) {
                     var $switch;
                     if (value === "1") {
-                        $switch = "<input data-toggle='toggle' value=" + row.id + " name='avaCheck' type='checkbox' checked/>";
+                        $switch = "<input  data-toggle='checkbox' value='1' name='avaCheck' type='checkbox' checked/>";
                     } else {
-                        $switch = "<input data-toggle='toggle' value=" + row.id + " name='avaCheck' type='checkbox'/>";
+                        $switch = "<input data-toggle='checkbox' value='0' name='avaCheck' type='checkbox'/>";
                     }
                     return $switch;
                 }
+            },
+            {
+                field: 'jobStatus',
+                title: "操作",
+                align: 'left',
+                width: 120,
+                valign: 'middle',
+                formatter: operateFormatter
             }
         ],
-
         onLoadSuccess: function () {
             var changeHandler = function () {
                 var id = $(this).val();
                 var state = $(this).prop('checked');
-                // alert("我进来啦" + "id为：" + id + " state为：" + state);
+                 //alert("我进来啦" + "id为：" + id + " state为：" + state);
                 updateStatus(id, state);
+                $("[name='avaCheck']").val(state == true ? 1 : 0);
                 //可以进行对开关的控制哥
                 /*var switchObj = $(this);
                 var flag = switchObj.prop("checked");
@@ -140,6 +298,44 @@
         }
     });
 
+    function operateFormatter(value, row, index) {
+        return [
+            '<input type="button" taskId='+row.id+'  onclick="deleteByTaskId(this)" class="btn-danger" id="rowDel" value="删除"/>'
+        ].join('');
+    }
+    function deleteByTaskId(dom) {
+        var taskId = $(dom).attr("taskId");
+        var jobStatus = $("[name='avaCheck']").val();
+       // alert(jobStatus);
+        if(jobStatus>0){
+            alert("牛逼哥，你需要关闭任务状态");
+            return false;
+        }else {
+            $.ajax({
+                url: "/removeByUniqueId"
+                , type: "POST"
+                , contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+                , data: {
+                    id: taskId
+                }
+                , success: function (data) {
+                    if (data>0) {
+                      //  alert("牛逼哥,操作成功");
+                        $(dom).parent().parent().remove();
+                        //layer.msg("操作成功！", {icon: 1});
+                    } else {
+                        alert("牛逼哥,操作失败")
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     *  更改任务状态
+     * @param id
+     * @param state
+     */
     function updateStatus(id, state) {
         $.ajax({
             url: "/changeStatus"
@@ -151,7 +347,8 @@
             }
             , success: function (data) {
                 if (data == "true") {
-                    alert("牛逼哥,操作成功")
+                 //   alert("牛逼哥,操作成功")
+                    //$table.bootstrapTable("refresh");//表格刷新数据
                     //layer.msg("操作成功！", {icon: 1});
                 } else {
                     alert("牛逼哥,操作失败")
@@ -162,6 +359,74 @@
             }
         });
     }
+
+    //新增用户
+    function addUser(){
+        var param = $("#addUserForm").serializeArray();
+        debugger;
+        $("#conf").attr("onclick","addUser()");
+        $.ajax({
+            url:"/user/addUser",
+            method:"post",
+            data:param,
+            dataType:"json",
+            success:function(data){
+                if(data.state=="success"){
+                    document.getElementById("al").innerText="新增成功";
+                    $("#addEnd").modal('show');
+                    $("#addUserModal").modal('hide');
+                    $("#dataGrid").bootstrapTable('refresh');
+                }
+            },
+            error:function(){
+                document.getElementById("al").innerText="新增失败";
+                $("#addEnd").modal('show');
+            }
+        });
+    }
+    //修改用户
+    function editUser(){
+        //获取选中行的数据
+        var rows = $("#dataGrid").bootstrapTable('getSelections');
+        if(rows.length!=1){
+            document.getElementById("tipContent").innerText="请选择一行数据";
+            $("#Tip").modal('show');
+        }
+        else{
+            var row = rows[0];
+            $('#editId').val(row.id);
+            $('#editAccount').val(row.account);
+            $('#editPassword').val(row.password);
+            $('#editName').val(row.name);
+            $('#editSex').val(row.sex);
+            $('#editEmail').val(row.email);
+            $('#editPhone').val(row.phone);
+            $('#editStates').val(row.states);
+            $('#editCreated_at').val(row.created_at);
+            $("#editModal").modal("show");
+        }
+    }
+    function updateUser(){
+        var param = $("#editForm").serializeArray();
+        //设为disable则无法获取
+        $.ajax({
+            url:"/user/updateUser",
+            method:"post",
+            data:param,
+            dataType:"json",
+            success:function(data){
+                if(data.state=="success"){
+                    $("#editModal").modal("hide");
+                    document.getElementById("tipContent").innerText="修改成功";
+                    $("#Tip").modal('show');
+                }
+            },
+            error:function(data){
+                alert("wrong");
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

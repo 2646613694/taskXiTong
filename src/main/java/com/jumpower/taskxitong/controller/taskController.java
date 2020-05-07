@@ -43,7 +43,6 @@ public class taskController {
     @ResponseBody
     public Object taskListJson(SysTask task){
         List<SysTask> sysTasks = taskService.list(task);
-
         return sysTasks;
     }
 
@@ -68,4 +67,15 @@ public class taskController {
       return "操作失败";
     }
 
+    /**
+     * 根据ID删除任务
+     * @param id
+     * @return
+     */
+    @PostMapping("/removeByUniqueId")
+    @ResponseBody
+    public Object removeByUniqueId(Long id){
+        int remove = taskService.remove(id);
+        return remove;
+    }
 }
