@@ -78,4 +78,19 @@ public class taskController {
         int remove = taskService.remove(id);
         return remove;
     }
+
+    @PostMapping("/addJob")
+    @ResponseBody
+    public Object addJob(SysTask sysTask){
+        sysTask.setJobStatus("0");
+        int save = taskService.save(sysTask);
+        return save;
+    }
+
+    @PostMapping("/updateJob")
+    @ResponseBody
+    public Object updateJob(SysTask sysTask){
+        int update = taskService.update(sysTask);
+        return update;
+    }
 }
